@@ -18,7 +18,7 @@ public class Config {
 
 	private Config() throws Exception {
 		FileInputStream input = new FileInputStream(
-				new File(System.getProperty("user.dir") + File.separator + "sync.properties"));
+				new File(System.getProperty("user.dir") + File.separator + "s3sync.properties"));
 		props = new Properties();
 		props.load(input);
 		input.close();
