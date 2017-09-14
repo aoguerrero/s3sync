@@ -57,6 +57,8 @@ public class S3Client extends ObjectStorageClient<AmazonS3> {
 		InitiateMultipartUploadResult initResponse = connection.initiateMultipartUpload(initRequest);
 		File file = new File(filePath);
 		long contentLength = file.length();
+		if(contentLength == 0)
+			return;
 		long partSize = 5242880;
 		long filePosition = 0;
 		for (int i = 1; filePosition < contentLength; i++) {

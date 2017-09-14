@@ -32,42 +32,44 @@ public class Main {
 		String localDirName = System.getProperty("user.dir");
 		File localDir = new File(localDirName);
 		final List<String> localFileNames = new ArrayList<String>();
+		final List<String> excludedFiles = Arrays.asList(Config.getInstance().getValue("exclude").split(","));		
 		localDir.listFiles(new FileFilter() {
 			@Override
 			public boolean accept(File file) {
 				if (!file.isDirectory()) {
 					String fileName = file.getName();
-					localFileNames.add(fileName);
-					logger.info("Local file " + fileName);
+					if (!excludedFiles.contains(fileName)) {
+						localFileNames.add(fileName);
+						logger.info("Local file " + fileName);
+					} else {
+						logger.info("Local file " + fileName + " (excluded)");
+					}
+
 				}
 				return false;
 			}
 		});
 
 		/* Remote files list */
-		String directoryName = Config.getInstance().getValue("bucket");		
+		String directoryName = Config.getInstance().getValue("bucket");
 		List<String> remoteFileNames = s3Client.listFiles(directoryName);
 
 		/* Upload and delete */
 		localFileNames.removeAll(remoteFileNames);
 		List<String> deletedFileNames = new ArrayList<String>();
-		List<String> excludedFiles = Arrays.asList(Config.getInstance().getValue("exclude").split(","));
 		for (String fileName : localFileNames) {
+			String filePath = localDirName + File.separator + fileName;
 			if (!fileName.endsWith(".delete")) {
-				if (!excludedFiles.contains(fileName)) {
-					String filePath = localDirName + File.separator + fileName;
-					s3Client.uploadFile(directoryName, fileName, filePath);
-				}
+				s3Client.uploadFile(directoryName, fileName, filePath);
 			} else {
 				String fileNameToDelete = fileName.substring(0, fileName.length() - 7);
 				s3Client.deleteFile(directoryName, fileNameToDelete);
 				deletedFileNames.add(fileNameToDelete);
-				File file = new File(fileName);
-				file.delete();
+				(new File(filePath)).delete();
 			}
 		}
 		remoteFileNames.removeAll(deletedFileNames);
-		
+
 		/* Download */
 		for (String fileName : remoteFileNames) {
 			String filePath = localDirName + File.separator + fileName;
