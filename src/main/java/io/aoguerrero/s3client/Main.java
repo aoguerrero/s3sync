@@ -31,7 +31,7 @@ public class Main {
 		/* Local files list */
 		String localDirName = System.getProperty("user.dir");
 		File localDir = new File(localDirName);
-		List<String> localFileNames = new ArrayList<String>();
+		final List<String> localFileNames = new ArrayList<String>();
 		localDir.listFiles(new FileFilter() {
 			@Override
 			public boolean accept(File file) {
