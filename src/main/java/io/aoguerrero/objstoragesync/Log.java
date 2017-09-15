@@ -1,4 +1,4 @@
-package io.aoguerrero.s3client;
+package io.aoguerrero.objstoragesync;
 
 public class Log {
 

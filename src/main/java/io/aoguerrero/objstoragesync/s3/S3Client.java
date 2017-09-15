@@ -1,11 +1,8 @@
-package io.aoguerrero.s3client;
+package io.aoguerrero.objstoragesync.s3;
 
 import java.io.File;
 import java.io.FileOutputStream;
 import java.util.ArrayList;
-import java.util.Base64;
-import java.util.Base64.Decoder;
-import java.util.Base64.Encoder;
 import java.util.List;
 
 import com.amazonaws.services.s3.AmazonS3;
@@ -19,15 +16,13 @@ import com.amazonaws.services.s3.model.S3ObjectInputStream;
 import com.amazonaws.services.s3.model.S3ObjectSummary;
 import com.amazonaws.services.s3.model.UploadPartRequest;
 
-public class S3Client extends ObjectStorageClient<AmazonS3> {
+import io.aoguerrero.objstoragesync.Log;
+import io.aoguerrero.objstoragesync.ObjStorageClient;
 
-	private Decoder decoder;
-	private Encoder encoder;
+public class S3Client extends ObjStorageClient<AmazonS3> {
 
 	public S3Client(AmazonS3 amazonS3) {
 		super(amazonS3);
-		this.encoder = Base64.getEncoder();
-		this.decoder = Base64.getDecoder();
 	}
 
 	@Override
@@ -97,14 +92,4 @@ public class S3Client extends ObjectStorageClient<AmazonS3> {
 		Log.info("[Delete] " + fileName);
 	}
 
-	/* ***** */
-
-	private String getKey(String fileName) throws Exception {
-		return encoder.encodeToString(fileName.getBytes("UTF-8"));
-	}
-
-	private String getFileName(String key) throws Exception {
-		return new String(decoder.decode(key), "UTF-8");
-
-	}
 }

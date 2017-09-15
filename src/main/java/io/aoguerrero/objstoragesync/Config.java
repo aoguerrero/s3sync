@@ -1,4 +1,4 @@
-package io.aoguerrero.s3client;
+package io.aoguerrero.objstoragesync;
 
 import java.io.File;
 import java.io.FileInputStream;
@@ -17,8 +17,13 @@ public class Config {
 	}
 
 	private Config() throws Exception {
+
+		String propertiesFileName = new java.io.File(
+				Config.class.getProtectionDomain().getCodeSource().getLocation().getPath()).getName();
+		propertiesFileName = propertiesFileName.substring(0, propertiesFileName.length()-4)+".properties";
+
 		FileInputStream input = new FileInputStream(
-				new File(System.getProperty("user.dir") + File.separator + "s3sync.properties"));
+				new File(System.getProperty("user.dir") + File.separator + propertiesFileName));
 		props = new Properties();
 		props.load(input);
 		input.close();
