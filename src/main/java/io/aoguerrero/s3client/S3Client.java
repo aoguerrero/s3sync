@@ -8,9 +8,6 @@ import java.util.Base64.Decoder;
 import java.util.Base64.Encoder;
 import java.util.List;
 
-import org.slf4j.Logger;
-import org.slf4j.LoggerFactory;
-
 import com.amazonaws.services.s3.AmazonS3;
 import com.amazonaws.services.s3.model.CompleteMultipartUploadRequest;
 import com.amazonaws.services.s3.model.InitiateMultipartUploadRequest;
@@ -23,8 +20,6 @@ import com.amazonaws.services.s3.model.S3ObjectSummary;
 import com.amazonaws.services.s3.model.UploadPartRequest;
 
 public class S3Client extends ObjectStorageClient<AmazonS3> {
-
-	private static final Logger logger = LoggerFactory.getLogger(S3Client.class);
 
 	private Decoder decoder;
 	private Encoder encoder;
@@ -44,7 +39,7 @@ public class S3Client extends ObjectStorageClient<AmazonS3> {
 			String key = objectSummary.getKey();
 			String fileName = getFileName(key);
 			result.add(fileName);
-			logger.info("File on S3 " + directoryName + "/" + key + "(" + fileName + ")");
+			Log.info("[S3 file] " + fileName);
 		}
 		return result;
 	}
@@ -57,24 +52,26 @@ public class S3Client extends ObjectStorageClient<AmazonS3> {
 		InitiateMultipartUploadResult initResponse = connection.initiateMultipartUpload(initRequest);
 		File file = new File(filePath);
 		long contentLength = file.length();
-		if(contentLength == 0)
+		if (contentLength == 0) {
+			Log.info("[Empty file] " + fileName);
 			return;
+		}
 		long partSize = 5242880;
 		long filePosition = 0;
+
 		for (int i = 1; filePosition < contentLength; i++) {
 			partSize = Math.min(partSize, (contentLength - filePosition));
 			UploadPartRequest uploadRequest = new UploadPartRequest().withBucketName(directoryName).withKey(key)
 					.withUploadId(initResponse.getUploadId()).withPartNumber(i).withFileOffset(filePosition)
 					.withFile(file).withPartSize(partSize);
 			partETags.add(connection.uploadPart(uploadRequest).getPartETag());
-
 			filePosition += partSize;
 		}
 		CompleteMultipartUploadRequest compRequest = new CompleteMultipartUploadRequest(directoryName, key,
 				initResponse.getUploadId(), partETags);
 
 		connection.completeMultipartUpload(compRequest);
-		logger.info("upload " + filePath + "->" + directoryName + "/" + key + "(" + fileName + ")");
+		Log.info("[Upload] " + fileName);
 	}
 
 	@Override
@@ -90,14 +87,14 @@ public class S3Client extends ObjectStorageClient<AmazonS3> {
 		}
 		s3ObjectInputStream.close();
 		fileOutputStream.close();
-		logger.info("download " + directoryName + "/" + key + "(" + fileName + ") ->" + filePath);
+		Log.info("[Download] " + fileName);
 	}
 
 	@Override
 	public void deleteFile(String directoryName, String fileName) throws Exception {
 		String key = getKey(fileName);
 		connection.deleteObject(directoryName, key);
-		logger.info("delete " + directoryName + "/" + key + "(" + fileName + ")");
+		Log.info("[Delete] " + fileName);
 	}
 
 	/* ***** */
