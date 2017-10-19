@@ -1,8 +1,14 @@
 # s3sync
 
+## Descripción
+
 Esta utilidad sincroniza los archivos de un directorio con un bucket de Amazon S3, no soporta subdirectorios.
 
-Uso:
+Los archivos en la nube son nombrados codificando el nombre original en Base64 para evitar problemas con nombres de archivo que contengan caracteres especiales.
+
+Requiere JDK 1.7+ y Apache Maven.
+
+## Uso
 
 1) Genere el Jar ejecutable
 
@@ -33,9 +39,9 @@ Debe llenar los valores de cada llave
 |-----|-----------|
 |accessKey|Valor de autenticación del usuario de AWS|
 |secretKey|Valor de autenticación del usuario de AWS|
-|region|Region de AWS donde se encuentra el bucket|
+|region|Region de AWS donde se encuentra el bucket, por ejemplo us-east-1|
 |bucket|Identificador del bucket|
-|exclude|Archivos que deben excluirse en la sincronización|
+|exclude|Archivos que deben excluirse en la sincronización separados por coma|
 |download|Indica si se desean descargar los archivos que se encuentran en S3 que no están localmente, los posibles valores on true o false|
 
 
@@ -45,3 +51,8 @@ Debe llenar los valores de cada llave
 cd /destination/path
 java -jar s3sync.jar
 ```
+
+## TO-DO
+
+* Soporte a subdirectorios
+* Soporte para Google Cloud
