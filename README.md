@@ -1,4 +1,4 @@
-#s3sync
+# s3sync
 
 Esta utilidad sincroniza los archivos de un directorio con un bucket de Amazon S3, no soporta subdirectorios.
 
