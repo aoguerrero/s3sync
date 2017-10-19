@@ -65,12 +65,18 @@ public abstract class Sync<T> {
 		remoteFileNames.removeAll(noDownload);
 
 		/* Download */
-		for (String fileName : remoteFileNames) {
-			String filePath = localDirName + File.separator + fileName;
-			File file = new File(filePath);
-			if (!file.exists()) {
-				client.downloadFile(directoryName, fileName, filePath);
+		Boolean enableDownload = Config.getInstance().getValue("download").equals("true");
+		
+		if(enableDownload) {
+			for (String fileName : remoteFileNames) {
+				String filePath = localDirName + File.separator + fileName;
+				File file = new File(filePath);
+				if (!file.exists()) {
+					client.downloadFile(directoryName, fileName, filePath);
+				}
 			}
+		} else {
+			Log.info("[Download disabled]");
 		}
 
 		Log.info("[Finish]");
