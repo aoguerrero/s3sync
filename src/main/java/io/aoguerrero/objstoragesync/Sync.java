@@ -16,7 +16,7 @@ public abstract class Sync<T> {
 	public void sync(String localDirName, ObjStorageClient<T> client) throws Exception {
 		/* Local files list */
 		final List<String> localFileNames = new ArrayList<String>();
-		final List<String> excludedFiles = Arrays.asList(Config.getInstance().getValue("exclude").split(","));
+		final List<String> excludedFiles = Arrays.asList(Config.getConfig().getValue("exclude").split(","));
 		(new File(localDirName)).listFiles(new FileFilter() {
 			@Override
 			public boolean accept(File file) {
@@ -35,7 +35,7 @@ public abstract class Sync<T> {
 		});
 
 		/* Remote files list */
-		String directoryName = Config.getInstance().getValue("bucket");
+		String directoryName = Config.getConfig().getValue("bucket");
 		List<String> remoteFileNames = client.listFiles(directoryName);
 
 		localFileNames.removeAll(remoteFileNames);
@@ -65,7 +65,7 @@ public abstract class Sync<T> {
 		remoteFileNames.removeAll(noDownload);
 
 		/* Download */
-		Boolean enableDownload = Config.getInstance().getValue("download").equals("true");
+		Boolean enableDownload = Config.getConfig().getValue("download").equals("true");
 		
 		if(enableDownload) {
 			for (String fileName : remoteFileNames) {

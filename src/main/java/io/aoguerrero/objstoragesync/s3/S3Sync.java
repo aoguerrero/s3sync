@@ -13,11 +13,11 @@ public class S3Sync extends Sync<AmazonS3> {
 
 	@Override
 	public void start(String localDirName) throws Exception {
-		BasicAWSCredentials credentials = new BasicAWSCredentials(Config.getInstance().getValue("accessKey"),
-				Config.getInstance().getValue("secretKey"));
+		BasicAWSCredentials credentials = new BasicAWSCredentials(Config.getConfig().getValue("accessKey"),
+				Config.getConfig().getValue("secretKey"));
 		AmazonS3 amazonS3 = AmazonS3ClientBuilder.standard()
 				.withCredentials(new AWSStaticCredentialsProvider(credentials))
-				.withRegion(Config.getInstance().getValue("region")).build();
+				.withRegion(Config.getConfig().getValue("region")).build();
 		ObjStorageClient<AmazonS3> s3Client = new S3Client(amazonS3);
 		this.sync(localDirName, s3Client);
 	}

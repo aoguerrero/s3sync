@@ -16,6 +16,7 @@ import com.amazonaws.services.s3.model.S3ObjectInputStream;
 import com.amazonaws.services.s3.model.S3ObjectSummary;
 import com.amazonaws.services.s3.model.UploadPartRequest;
 
+import io.aoguerrero.objstoragesync.Config;
 import io.aoguerrero.objstoragesync.Log;
 import io.aoguerrero.objstoragesync.ObjStorageClient;
 
@@ -67,6 +68,12 @@ public class S3Client extends ObjStorageClient<AmazonS3> {
 
 		connection.completeMultipartUpload(compRequest);
 		Log.info("[Upload] " + fileName);
+		
+		boolean removeFiles = Boolean.valueOf(Config.getConfig().getValue("removeFiles"));
+		if(removeFiles) {
+			Log.info("[Removed] " + fileName);
+			file.delete();
+		}
 	}
 
 	@Override
