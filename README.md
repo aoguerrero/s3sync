@@ -43,7 +43,7 @@ Debe llenar los valores de cada llave
 |secretKey|Valor de autenticación del usuario de AWS|
 |region|Region de AWS donde se encuentra el bucket, por ejemplo us-east-1|
 |bucket|Identificador del bucket|
-|exclude|Archivos que deben excluirse en la sincronización separados por coma|
+|exclude|Archivos que deben excluirse en la sincronización separados por coma (se recomienda tener siempre s3sync.jar,s3sync.properties)|
 |download|Indica si se desean descargar los archivos que se encuentran en S3 que no están localmente, los posibles valores on true o false|
 |encodeNames|Indica si se conservarán los nombres originales de los archivos o se codificarán, los posibles valores son true o false|
 |removeFiles|Indica si se deben eliminar los archivos una vez cargados, los posibles valores son true o false|
@@ -61,7 +61,7 @@ java -jar s3sync.jar <opciones>
 ```
 --home=/rutal/directorio
 ```
-Indica que en lugar de buscar la configuración y los archivos a cargar / descargar en el directorio donde actual se inicie en esa ruta.
+Especifica en que ruta se ubica el archivo de configuración y los archivos a cargar (en lugar del directorio actual).
 
 
 ## TO-DO
