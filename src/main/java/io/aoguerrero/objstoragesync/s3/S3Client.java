@@ -33,9 +33,11 @@ public class S3Client extends ObjStorageClient<AmazonS3> {
 		List<String> result = new ArrayList<String>();
 		for (S3ObjectSummary objectSummary : objectSummaries) {
 			String key = objectSummary.getKey();
-			String fileName = getFileName(key);
-			result.add(fileName);
-			Log.info("[S3 file] " + fileName);
+			if(!key.contains("/")) { /* No se incluyen archivos en directorios */
+				String fileName = getFileName(key);
+				result.add(fileName);
+				Log.info("[S3 file] " + fileName);
+			}
 		}
 		return result;
 	}
