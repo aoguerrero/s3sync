@@ -1,3 +1,6 @@
+# IMPORTANT: THIS PROJECT USES DEPRECATED APIS, DON'T USE
+---
+
 # s3sync
 
 ## Descripción
